@@ -82,3 +82,31 @@ input{
     align-self: center;
     font-size: 20px;
 }
+
+.result-table{
+    width: 500px;
+    height: 500px;
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+.wall{
+    background-color: black;
+}
+
+.road{
+    background-color: white;
+}
+
+.exit{
+    background-color: red;
+}
+
+.solution{
+    background-color: coral;
+
+}
+
+.treasure{
+    background-color: brown;
+}

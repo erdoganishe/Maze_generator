@@ -100,7 +100,7 @@ function getRandomValidDirection(directions) {
   }
 
 function generate_maze(width,height){
-
+    let solution = []
     let maze = new Maze(width,height)
     let current_path = [[0,0]]
     maze.cells[0][0].isVisited=true
@@ -111,8 +111,8 @@ function generate_maze(width,height){
         let current = current_path[current_path.length-1]
         
         if (current[0] == maze.cells[0].length-1 && current[1]==maze.cells.length-1){
-            maze.solution = current_path
-            console.log(maze.solution)
+            solution = current_path.slice()
+            maze.solution=solution;
         }
 
         if(maze.isStop(current[0],current[1])){
@@ -153,14 +153,107 @@ function generate_maze(width,height){
              
         }
     } 
-    
 
     return maze
 
 }
 
+function get_render_maze(maze){
+    let table = []
+    for(let i = 0; i< maze.cells[0].length*2+1;i +=1){
+        table.push([])
+        for(let j = 0; j<maze.cells.length*2+1; j +=1){
+            table[i].push(1)
+        }
+    }
+    for(let i = 1; i<maze.cells[0].length*2+1;i +=2){
+        for(let j = 1; j<maze.cells.length*2+1; j +=2){
 
-let maze = generate_maze(5,5)
+            let isSolution = false
+
+            table[i][j] = 0
+            if (isInSolution(maze, (j-j%2)/2, (i-i%2)/2)){
+                table[i][j] = 2 
+                isSolution = true               
+            }
+
+            if (maze.cells[(i-i%2)/2][(j-j%2)/2].isN){
+                table[i-1][j] = 0
+                if (isInSolution(maze, (j-j%2)/2, (i-i%2)/2  - 1) && isSolution){
+                    table[i-1][j] = 2              
+                }
+            }
+            if (maze.cells[(i-i%2)/2][(j-j%2)/2].isS){
+                table[i+1][j] = 0
+                if (isInSolution(maze, (j-j%2)/2, (i-i%2)/2 + 1) && isSolution){
+                    table[i+1][j] = 2               
+                }
+            }
+            if (maze.cells[(i-i%2)/2][(j-j%2)/2].isE){
+                table[i][j+1] = 0
+                if (isInSolution(maze, (j-j%2)/2+1, (i-i%2)/2) && isSolution){
+                    table[i][j+1] = 2               
+                }
+            }
+            if (maze.cells[(i-i%2)/2][(j-j%2)/2].isW){
+                table[i][j-1] = 0
+                if (isInSolution(maze, (j-j%2)/2 - 1, (i-i%2)/2) && isSolution){
+                    table[i][j-1] = 2               
+                }
+            }
+
+            
+            
+
+        }
+    }
+    return table
+}
+
+function isInSolution(maze, x, y){
+    for (let i = 0; i<maze.solution.length; i++){
+        if (x == maze.solution[i][1] && y == maze.solution[i][0]) return true
+    }
+    return false
+}
+
+function render_maze(render){
+    const table = document.getElementsByClassName("result-table")[0]
+
+    var rowCount = table.rows.length;
+    for (var i = rowCount - 1; i >= 0; i--) {
+        table.deleteRow(i);
+    }
+
+    for (var i = 0;i < render[0].length; i++){
+        var row = table.insertRow()
+        for (let j=0; j<render.length;j++){
+            var cell = row.insertCell(j)
+            if (render[i][j]==1){
+                cell.className = "wall"
+            }
+            if (render[i][j]==0){
+                cell.className = "road"
+            }
+            if (render[i][j]==2){
+                cell.className = "solution"
+            }
+            // if (render[i][j]==3){
+            //     cell.className = "treasure"
+            // }
+            if ((i==1 && j==0)||(i==render.length-2 && j==render.length-1)){
+                cell.className = "exit"
+            }
+        }
+        
+    }
+}
+
+let maze = generate_maze(50,50)
 
 console.log("This is maze",maze)
+
+render = get_render_maze(maze)
+console.log("This is render", render)
 console.log("This is solution", maze.solution)
+render_maze(render)
