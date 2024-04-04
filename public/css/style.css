@@ -29,10 +29,11 @@ header h1{
 
 
 .container{
+    
     display: flex;
     flex-direction: column;
     margin: 10px auto;
-    margin-top: 200px;
+    margin-top: 50px;
     background: #333333;
     color: white;
     padding-bottom: 30px;
@@ -63,7 +64,7 @@ input{
 }
 
 .send-button{
-    width: 200px;
+    width: 170px;
     height: 30px;
     font-size: 25px;
     color: white;
@@ -109,4 +110,8 @@ input{
 
 .treasure{
     background-color: brown;
+}
+
+.hidden{
+    display: none;
 }

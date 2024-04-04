@@ -110,7 +110,7 @@ function generate_maze(width,height){
 
         let current = current_path[current_path.length-1]
         
-        if (current[0] == maze.cells[0].length-1 && current[1]==maze.cells.length-1){
+        if (current[0] == maze.cells.length-1 && current[1]==maze.cells[0].length-1){
             solution = current_path.slice()
             maze.solution=solution;
         }
@@ -159,15 +159,17 @@ function generate_maze(width,height){
 }
 
 function get_render_maze(maze){
+    console.log(maze.solution)
     let table = []
-    for(let i = 0; i< maze.cells[0].length*2+1;i +=1){
+    for(let i = 0; i< maze.cells.length*2+1;i +=1){
         table.push([])
-        for(let j = 0; j<maze.cells.length*2+1; j +=1){
+        for(let j = 0; j<maze.cells[0].length*2+1; j +=1){
             table[i].push(1)
         }
     }
-    for(let i = 1; i<maze.cells[0].length*2+1;i +=2){
-        for(let j = 1; j<maze.cells.length*2+1; j +=2){
+
+    for(let j = 1; j<maze.cells[0].length*2+1;j +=2){
+        for(let i = 1; i<maze.cells.length*2+1; i +=2){
 
             let isSolution = false
 
@@ -202,9 +204,6 @@ function get_render_maze(maze){
                 }
             }
 
-            
-            
-
         }
     }
     return table
@@ -220,14 +219,23 @@ function isInSolution(maze, x, y){
 function render_maze(render){
     const table = document.getElementsByClassName("result-table")[0]
 
+    if (render.length > render[0].length){
+        table.style.width = 500*render.length/render[0].length + 'px'
+        console.log(table.style.width, table.style.height)
+    }
+    else{
+        table.style.height = 500*render.length/render[0].length + 'px'
+        console.log(table.style.width, table.style.height)
+    }
+
     var rowCount = table.rows.length;
     for (var i = rowCount - 1; i >= 0; i--) {
         table.deleteRow(i);
     }
 
-    for (var i = 0;i < render[0].length; i++){
+    for (var i = 0;i < render.length; i++){
         var row = table.insertRow()
-        for (let j=0; j<render.length;j++){
+        for (let j=0; j<render[0].length;j++){
             var cell = row.insertCell(j)
             if (render[i][j]==1){
                 cell.className = "wall"
@@ -241,19 +249,65 @@ function render_maze(render){
             // if (render[i][j]==3){
             //     cell.className = "treasure"
             // }
-            if ((i==1 && j==0)||(i==render.length-2 && j==render.length-1)){
+            if ((i==1 && j==0)||(i==render.length-2 && j==render[0].length-1)){
                 cell.className = "exit"
             }
         }
         
     }
 }
+function changeSolutionColor(newColor) {
 
-let maze = generate_maze(50,50)
+    var styleElement = document.querySelector('style');
 
-console.log("This is maze",maze)
+    if (styleElement) {
 
-render = get_render_maze(maze)
-console.log("This is render", render)
-console.log("This is solution", maze.solution)
-render_maze(render)
+        var cssRules = styleElement.textContent;
+
+        cssRules = cssRules.replace(/\.solution\s*{\s*background-color:\s*[^;]+;/, '.solution { background-color: ' + newColor + ';');
+
+
+        styleElement.textContent = cssRules;
+    } else {
+
+        var newStyleElement = document.createElement('style');
+        newStyleElement.textContent = '.solution { background-color: ' + newColor + '; }';
+        document.head.appendChild(newStyleElement);
+    }
+}
+
+
+const generate_button = document.getElementsByClassName("send-button")[0]
+
+
+generate_button.addEventListener('click', ()=>{
+    const inputs = document.getElementsByClassName("value-input")
+    const width = inputs[0].value
+    const height = inputs[1].value
+    let maze = generate_maze((width-1)/2 , (height-1)/2)
+    console.log(maze)
+    render = get_render_maze(maze)
+    render_maze(render)
+
+    const resultDiv = document.getElementsByClassName("result")[0]
+    resultDiv.classList.remove("hidden")
+    console.log("done")
+})
+
+
+const solutionCheckBox = document.getElementsByClassName("solution-input")[0]
+solutionCheckBox.checked = false
+changeSolutionColor('white')
+
+solutionCheckBox.addEventListener('change', ()=>{
+    if (solutionCheckBox.checked){
+        changeSolutionColor('coral')
+    }
+    else{
+        changeSolutionColor('white')
+    }
+    
+})
+
+
+
