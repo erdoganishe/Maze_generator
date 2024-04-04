@@ -103,10 +103,6 @@ input{
     background-color: red;
 }
 
-.solution{
-    background-color: coral;
-
-}
 
 .treasure{
     background-color: brown;
@@ -115,3 +111,15 @@ input{
 .hidden{
     display: none;
 }
+.solution2{
+    background-color: blue;
+
+}
+.solution{
+    background-color: coral;
+
+}
+.road{
+    background-color: white;
+}
+

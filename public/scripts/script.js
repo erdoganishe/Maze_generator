@@ -1,4 +1,4 @@
-class MazeCell{
+class MazeCell {
     constructor(isVisited, isN, isE, isS, isW) {
         this.isVisited = isVisited
         this.isN = isN
@@ -9,223 +9,300 @@ class MazeCell{
 
 }
 
-class Maze{
-    constructor(width, height){
+class Maze {
+    constructor(width, height) {
         let cells = []
-        for (let i = 0;i<height;i++){
+        for (let i = 0; i < height; i++) {
             cells.push([])
-            for (let j=0;j<width;j++){
-                cells[i].push(new MazeCell(false,false,false,false,false))
+            for (let j = 0; j < width; j++) {
+                cells[i].push(new MazeCell(false, false, false, false, false))
             }
         }
         this.cells = cells
         this.solution = []
+        this.pathToStop = []
 
     }
 
-    isStop(x,y){
-        if (x!=0){
-            if (!this.cells[x-1][y].isVisited){
+    isStop(x, y) {
+        if (x != 0) {
+            if (!this.cells[x - 1][y].isVisited) {
                 return false
             }
         }
-        if (x!=this.cells.length-1){
-            if (!this.cells[x+1][y].isVisited){
+        if (x != this.cells.length - 1) {
+            if (!this.cells[x + 1][y].isVisited) {
                 return false
             }
         }
-        if (y!=0){
-            if (!this.cells[x][y-1].isVisited){
+        if (y != 0) {
+            if (!this.cells[x][y - 1].isVisited) {
                 return false
             }
         }
-        if (y!=this.cells[0].length-1){
-            if (!this.cells[x][y+1].isVisited){
+        if (y != this.cells[0].length - 1) {
+            if (!this.cells[x][y + 1].isVisited) {
                 return false
             }
         }
         return true
     }
 
-    getAllPossibleDirections(x,y){
-        let dirs = {'N':false,'S':false,'E':false,'W':false}
-        if (x!=0){
-            if (!this.cells[x-1][y].isVisited){
+    getAllPossibleDirections(x, y) {
+        let dirs = { 'N': false, 'S': false, 'E': false, 'W': false }
+        if (x != 0) {
+            if (!this.cells[x - 1][y].isVisited) {
                 dirs.N = true
             }
         }
-        if (x!=this.cells.length-1){
-            if (!this.cells[x+1][y].isVisited){
+        if (x != this.cells.length - 1) {
+            if (!this.cells[x + 1][y].isVisited) {
                 dirs.S = true
             }
         }
-        if (y!=0){
-            if (!this.cells[x][y-1].isVisited){
+        if (y != 0) {
+            if (!this.cells[x][y - 1].isVisited) {
                 dirs.W = true
             }
         }
-        if (y!=this.cells[0].length-1){
-            if (!this.cells[x][y+1].isVisited){
+        if (y != this.cells[0].length - 1) {
+            if (!this.cells[x][y + 1].isVisited) {
                 dirs.E = true
             }
         }
         return dirs
     }
 
-   
+
 }
 
 function getRandomValidDirection(directions) {
-    const validDirections = []; 
+    const validDirections = [];
     if (directions.N) {
-      validDirections.push('N');
+        validDirections.push('N');
     }
-  
+
     if (directions.S) {
-      validDirections.push('S');
+        validDirections.push('S');
     }
-  
+
     if (directions.W) {
-      validDirections.push('W');
+        validDirections.push('W');
     }
-  
+
     if (directions.E) {
-      validDirections.push('E');
+        validDirections.push('E');
     }
-  
+
     const randomIndex = Math.floor(Math.random() * validDirections.length);
-  
+
     return validDirections[randomIndex];
-  
-  }
 
-function generate_maze(width,height){
+}
+
+function generate_maze(width, height) {
     let solution = []
-    let maze = new Maze(width,height)
-    let current_path = [[0,0]]
-    maze.cells[0][0].isVisited=true
+    let maze = new Maze(width, height)
+    let current_path = [[0, 0]]
+    maze.cells[0][0].isVisited = true
 
 
-    while (current_path.length!=0){
+    while (current_path.length != 0) {
 
-        let current = current_path[current_path.length-1]
-        
-        if (current[0] == maze.cells.length-1 && current[1]==maze.cells[0].length-1){
+        let current = current_path[current_path.length - 1]
+
+        if (current[0] == maze.cells.length - 1 && current[1] == maze.cells[0].length - 1) {
             solution = current_path.slice()
-            maze.solution=solution;
+            maze.solution = solution;
         }
 
-        if(maze.isStop(current[0],current[1])){
+        if (maze.isStop(current[0], current[1])) {
+            maze.pathToStop.push(current_path.slice())
             current_path.pop()
         }
-        else{
-            let dirs = maze.getAllPossibleDirections(current[0],current[1])
+        else {
+            let dirs = maze.getAllPossibleDirections(current[0], current[1])
             let dir = getRandomValidDirection(dirs)
             switch (dir) {
                 case 'N':
                     maze.cells[current[0]][current[1]].isN = true
-                    maze.cells[current[0]-1][current[1]].isS = true
-                    maze.cells[current[0]-1][current[1]].isVisited = true
-                    current_path.push([current[0]-1, current[1]])
-                break;
+                    maze.cells[current[0] - 1][current[1]].isS = true
+                    maze.cells[current[0] - 1][current[1]].isVisited = true
+                    current_path.push([current[0] - 1, current[1]])
+                    break;
                 case 'S':
                     maze.cells[current[0]][current[1]].isS = true
-                    maze.cells[current[0]+1][current[1]].isN = true
-                    maze.cells[current[0]+1][current[1]].isVisited = true
-                    current_path.push([current[0]+1, current[1]])
-                break;
+                    maze.cells[current[0] + 1][current[1]].isN = true
+                    maze.cells[current[0] + 1][current[1]].isVisited = true
+                    current_path.push([current[0] + 1, current[1]])
+                    break;
                 case 'W':
                     maze.cells[current[0]][current[1]].isW = true
-                    maze.cells[current[0]][current[1]-1].isE = true
-                    maze.cells[current[0]][current[1]-1].isVisited = true
-                    current_path.push([current[0], current[1]-1])
-                break;
+                    maze.cells[current[0]][current[1] - 1].isE = true
+                    maze.cells[current[0]][current[1] - 1].isVisited = true
+                    current_path.push([current[0], current[1] - 1])
+                    break;
                 case 'E':
                     maze.cells[current[0]][current[1]].isE = true
-                    maze.cells[current[0]][current[1]+1].isW = true
-                    maze.cells[current[0]][current[1]+1].isVisited = true
-                    current_path.push([current[0], current[1]+1])
-                break;
+                    maze.cells[current[0]][current[1] + 1].isW = true
+                    maze.cells[current[0]][current[1] + 1].isVisited = true
+                    current_path.push([current[0], current[1] + 1])
+                    break;
                 default:
                     break
             }
-              
-             
+
+
         }
-    } 
+    }
 
     return maze
 
 }
 
-function get_render_maze(maze){
-    console.log(maze.solution)
+function get_render_maze(maze, isTreasure) {
+    const treasureIndex = Math.floor(Math.random() * maze.pathToStop.length);
+
+
     let table = []
-    for(let i = 0; i< maze.cells.length*2+1;i +=1){
+    for (let i = 0; i < maze.cells.length * 2 + 1; i += 1) {
         table.push([])
-        for(let j = 0; j<maze.cells[0].length*2+1; j +=1){
+        for (let j = 0; j < maze.cells[0].length * 2 + 1; j += 1) {
             table[i].push(1)
         }
     }
+    if (isTreasure) {
+        for (let j = 1; j < maze.cells[0].length * 2 + 1; j += 2) {
+            for (let i = 1; i < maze.cells.length * 2 + 1; i += 2) {
 
-    for(let j = 1; j<maze.cells[0].length*2+1;j +=2){
-        for(let i = 1; i<maze.cells.length*2+1; i +=2){
 
-            let isSolution = false
+                let isSolution = false
+                let isTreasureSolution = false
 
-            table[i][j] = 0
-            if (isInSolution(maze, (j-j%2)/2, (i-i%2)/2)){
-                table[i][j] = 2 
-                isSolution = true               
-            }
-
-            if (maze.cells[(i-i%2)/2][(j-j%2)/2].isN){
-                table[i-1][j] = 0
-                if (isInSolution(maze, (j-j%2)/2, (i-i%2)/2  - 1) && isSolution){
-                    table[i-1][j] = 2              
+                table[i][j] = 0
+                if (isInSolution(maze, (j - j % 2) / 2, (i - i % 2) / 2)) {
+                    table[i][j] = 2
+                    isSolution = true
                 }
-            }
-            if (maze.cells[(i-i%2)/2][(j-j%2)/2].isS){
-                table[i+1][j] = 0
-                if (isInSolution(maze, (j-j%2)/2, (i-i%2)/2 + 1) && isSolution){
-                    table[i+1][j] = 2               
+                if (isInTreasureSolution(maze, treasureIndex, (j - j % 2) / 2, (i - i % 2) / 2)) {
+                    table[i][j] += 3
+                    isTreasureSolution = true
                 }
-            }
-            if (maze.cells[(i-i%2)/2][(j-j%2)/2].isE){
-                table[i][j+1] = 0
-                if (isInSolution(maze, (j-j%2)/2+1, (i-i%2)/2) && isSolution){
-                    table[i][j+1] = 2               
-                }
-            }
-            if (maze.cells[(i-i%2)/2][(j-j%2)/2].isW){
-                table[i][j-1] = 0
-                if (isInSolution(maze, (j-j%2)/2 - 1, (i-i%2)/2) && isSolution){
-                    table[i][j-1] = 2               
-                }
-            }
 
+                if (maze.cells[(i - i % 2) / 2][(j - j % 2) / 2].isN) {
+                    table[i - 1][j] = 0
+                    if (isInSolution(maze, (j - j % 2) / 2, (i - i % 2) / 2 - 1) && isSolution) {
+                        table[i - 1][j] = 2
+                    }
+                    if (isInTreasureSolution(maze, treasureIndex, (j - j % 2) / 2, (i - i % 2) / 2 - 1) && isTreasureSolution) {
+                        table[i - 1][j] += 3
+                    }
+                }
+                if (maze.cells[(i - i % 2) / 2][(j - j % 2) / 2].isS) {
+                    table[i + 1][j] = 0
+                    if (isInSolution(maze, (j - j % 2) / 2, (i - i % 2) / 2 + 1) && isSolution) {
+                        table[i + 1][j] = 2
+                    }
+                    if (isInTreasureSolution(maze, treasureIndex, (j - j % 2) / 2, (i - i % 2) / 2 + 1) && isTreasureSolution) {
+                        table[i + 1][j] += 3
+                    }
+                }
+                if (maze.cells[(i - i % 2) / 2][(j - j % 2) / 2].isE) {
+                    table[i][j + 1] = 0
+                    if (isInSolution(maze, (j - j % 2) / 2 + 1, (i - i % 2) / 2) && isSolution) {
+                        table[i][j + 1] = 2
+                    }
+                    if (isInTreasureSolution(maze, treasureIndex, (j - j % 2) / 2 + 1, (i - i % 2) / 2) && isTreasureSolution) {
+                        table[i][j + 1] += 3
+                    }
+                }
+                if (maze.cells[(i - i % 2) / 2][(j - j % 2) / 2].isW) {
+                    table[i][j - 1] = 0
+                    if (isInSolution(maze, (j - j % 2) / 2 - 1, (i - i % 2) / 2) && isSolution) {
+                        table[i][j - 1] = 2
+                    }
+                    if (isInTreasureSolution(maze, treasureIndex, (j - j % 2) / 2 - 1, (i - i % 2) / 2) && isTreasureSolution) {
+                        table[i][j - 1] += 3
+                    }
+                }
+
+                if (maze.pathToStop[treasureIndex][maze.pathToStop[treasureIndex].length - 1][1] == (j - j % 2) / 2 &&
+                    maze.pathToStop[treasureIndex][maze.pathToStop[treasureIndex].length - 1][0] == (i - i % 2) / 2) {
+                    table[i][j] = 4
+                }
+
+            }
         }
     }
+    else {
+
+        for (let j = 1; j < maze.cells[0].length * 2 + 1; j += 2) {
+            for (let i = 1; i < maze.cells.length * 2 + 1; i += 2) {
+
+                let isSolution = false
+
+                table[i][j] = 0
+                if (isInSolution(maze, (j - j % 2) / 2, (i - i % 2) / 2)) {
+                    table[i][j] = 2
+                    isSolution = true
+                }
+
+                if (maze.cells[(i - i % 2) / 2][(j - j % 2) / 2].isN) {
+                    table[i - 1][j] = 0
+                    if (isInSolution(maze, (j - j % 2) / 2, (i - i % 2) / 2 - 1) && isSolution) {
+                        table[i - 1][j] = 2
+                    }
+                }
+                if (maze.cells[(i - i % 2) / 2][(j - j % 2) / 2].isS) {
+                    table[i + 1][j] = 0
+                    if (isInSolution(maze, (j - j % 2) / 2, (i - i % 2) / 2 + 1) && isSolution) {
+                        table[i + 1][j] = 2
+                    }
+                }
+                if (maze.cells[(i - i % 2) / 2][(j - j % 2) / 2].isE) {
+                    table[i][j + 1] = 0
+                    if (isInSolution(maze, (j - j % 2) / 2 + 1, (i - i % 2) / 2) && isSolution) {
+                        table[i][j + 1] = 2
+                    }
+                }
+                if (maze.cells[(i - i % 2) / 2][(j - j % 2) / 2].isW) {
+                    table[i][j - 1] = 0
+                    if (isInSolution(maze, (j - j % 2) / 2 - 1, (i - i % 2) / 2) && isSolution) {
+                        table[i][j - 1] = 2
+                    }
+                }
+
+            }
+        }
+    }
+
+
     return table
 }
 
-function isInSolution(maze, x, y){
-    for (let i = 0; i<maze.solution.length; i++){
+function isInSolution(maze, x, y) {
+    for (let i = 0; i < maze.solution.length; i++) {
         if (x == maze.solution[i][1] && y == maze.solution[i][0]) return true
     }
     return false
 }
+function isInTreasureSolution(maze, index, x, y) {
+    for (let i = 0; i < maze.pathToStop[index].length; i++) {
+        if (x == maze.pathToStop[index][i][1] && y == maze.pathToStop[index][i][0]) return true
+    }
+    return false
+}
 
-function render_maze(render){
+function render_maze(render, isTreasure) {
     const table = document.getElementsByClassName("result-table")[0]
 
-    if (render.length > render[0].length){
-        table.style.width = 500*render.length/render[0].length + 'px'
-        console.log(table.style.width, table.style.height)
+    if (render.length > render[0].length) {
+        table.style.width = 500 * render.length / render[0].length + 'px'
+
     }
-    else{
-        table.style.height = 500*render.length/render[0].length + 'px'
-        console.log(table.style.width, table.style.height)
+    else {
+        table.style.height = 500 * render.length / render[0].length + 'px'
+
     }
 
     var rowCount = table.rows.length;
@@ -233,81 +310,96 @@ function render_maze(render){
         table.deleteRow(i);
     }
 
-    for (var i = 0;i < render.length; i++){
+    for (var i = 0; i < render.length; i++) {
         var row = table.insertRow()
-        for (let j=0; j<render[0].length;j++){
+        for (let j = 0; j < render[0].length; j++) {
             var cell = row.insertCell(j)
-            if (render[i][j]==1){
+            if (render[i][j] == 1) {
                 cell.className = "wall"
             }
-            if (render[i][j]==0){
+            if (render[i][j] == 0) {
                 cell.className = "road"
             }
-            if (render[i][j]==2){
+            if (render[i][j] == 2) {
                 cell.className = "solution"
             }
-            // if (render[i][j]==3){
-            //     cell.className = "treasure"
-            // }
-            if ((i==1 && j==0)||(i==render.length-2 && j==render[0].length-1)){
+            if (render[i][j] == 3) {
+                cell.className = "solution2"
+            }
+            if (render[i][j] == 4) {
+                cell.className = "treasure"
+            }
+            if (render[i][j] == 5) {
+                cell.className = "solution2 solution"
+            }
+            if ((i == 1 && j == 0) || (i == render.length - 2 && j == render[0].length - 1)) {
                 cell.className = "exit"
             }
+
+
         }
-        
+
     }
-}
-function changeSolutionColor(newColor) {
-
-    var styleElement = document.querySelector('style');
-
-    if (styleElement) {
-
-        var cssRules = styleElement.textContent;
-
-        cssRules = cssRules.replace(/\.solution\s*{\s*background-color:\s*[^;]+;/, '.solution { background-color: ' + newColor + ';');
-
-
-        styleElement.textContent = cssRules;
-    } else {
-
-        var newStyleElement = document.createElement('style');
-        newStyleElement.textContent = '.solution { background-color: ' + newColor + '; }';
-        document.head.appendChild(newStyleElement);
-    }
+    solutionCheckBox.checked = false
+    RemoveVision()
 }
 
 
 const generate_button = document.getElementsByClassName("send-button")[0]
 
 
-generate_button.addEventListener('click', ()=>{
+generate_button.addEventListener('click', () => {
     const inputs = document.getElementsByClassName("value-input")
+    const options = document.getElementsByClassName("option-input")
     const width = inputs[0].value
     const height = inputs[1].value
-    let maze = generate_maze((width-1)/2 , (height-1)/2)
-    console.log(maze)
-    render = get_render_maze(maze)
+    const isTreasure = options[0].checked
+
+    let maze = generate_maze((width - 1) / 2, (height - 1) / 2)
+
+    render = get_render_maze(maze, isTreasure)
     render_maze(render)
 
     const resultDiv = document.getElementsByClassName("result")[0]
     resultDiv.classList.remove("hidden")
-    console.log("done")
+
 })
 
+function RemoveVision() {
+    const elems = document.getElementsByClassName("solution")
+    const elems2 = document.getElementsByClassName("solution2")
+
+    for (let i = 0; i < elems.length; i++) {
+        elems[i].classList.add('road')
+    }
+    for (let i = 0; i < elems2.length; i++) {
+        elems2[i].classList.add('road')
+    }
+}
+
+function addVision() {
+    const elems = document.getElementsByClassName("solution")
+    const elems2 = document.getElementsByClassName("solution2")
+
+    for (let i = 0; i < elems.length; i++) {
+        elems[i].classList.remove('road')
+    }
+    for (let i = 0; i < elems2.length; i++) {
+        elems2[i].classList.remove('road')
+    }
+}
 
 const solutionCheckBox = document.getElementsByClassName("solution-input")[0]
+
 solutionCheckBox.checked = false
-changeSolutionColor('white')
 
-solutionCheckBox.addEventListener('change', ()=>{
-    if (solutionCheckBox.checked){
-        changeSolutionColor('coral')
+
+solutionCheckBox.addEventListener('change', () => {
+    if (solutionCheckBox.checked) {
+        addVision()
     }
-    else{
-        changeSolutionColor('white')
+    else {
+        RemoveVision()
     }
-    
 })
-
-
 
