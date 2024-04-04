@@ -1,3 +1,5 @@
+
+//class, go to back
 class MazeCell {
     constructor(isVisited, isN, isE, isS, isW) {
         this.isVisited = isVisited
@@ -8,7 +10,7 @@ class MazeCell {
     }
 
 }
-
+//class, go to back
 class Maze {
     constructor(width, height) {
         let cells = []
@@ -76,6 +78,7 @@ class Maze {
 
 }
 
+//func for maze, back
 function getRandomValidDirection(directions) {
     const validDirections = [];
     if (directions.N) {
@@ -100,6 +103,7 @@ function getRandomValidDirection(directions) {
 
 }
 
+//maze generation, to back
 function generate_maze(width, height) {
     let solution = []
     let maze = new Maze(width, height)
@@ -160,6 +164,7 @@ function generate_maze(width, height) {
 
 }
 
+//to back, result sends to front
 function get_render_maze(maze, isTreasure) {
     const treasureIndex = Math.floor(Math.random() * maze.pathToStop.length);
 
@@ -280,12 +285,14 @@ function get_render_maze(maze, isTreasure) {
     return table
 }
 
+//to back
 function isInSolution(maze, x, y) {
     for (let i = 0; i < maze.solution.length; i++) {
         if (x == maze.solution[i][1] && y == maze.solution[i][0]) return true
     }
     return false
 }
+//to back
 function isInTreasureSolution(maze, index, x, y) {
     for (let i = 0; i < maze.pathToStop[index].length; i++) {
         if (x == maze.pathToStop[index][i][1] && y == maze.pathToStop[index][i][0]) return true
@@ -293,6 +300,8 @@ function isInTreasureSolution(maze, index, x, y) {
     return false
 }
 
+
+//render, front
 function render_maze(render, isTreasure) {
     const table = document.getElementsByClassName("result-table")[0]
 
@@ -345,9 +354,48 @@ function render_maze(render, isTreasure) {
 }
 
 
+
+//front
+function RemoveVision() {
+    const elems = document.getElementsByClassName("solution")
+    const elems2 = document.getElementsByClassName("solution2")
+
+    for (let i = 0; i < elems.length; i++) {
+        elems[i].classList.add('road')
+    }
+    for (let i = 0; i < elems2.length; i++) {
+        elems2[i].classList.add('road')
+    }
+}
+
+//front
+function addVision() {
+    const elems = document.getElementsByClassName("solution")
+    const elems2 = document.getElementsByClassName("solution2")
+
+    for (let i = 0; i < elems.length; i++) {
+        elems[i].classList.remove('road')
+    }
+    for (let i = 0; i < elems2.length; i++) {
+        elems2[i].classList.remove('road')
+    }
+}
+
+//setup
 const generate_button = document.getElementsByClassName("send-button")[0]
+const solutionCheckBox = document.getElementsByClassName("solution-input")[0]
+solutionCheckBox.checked = false
 
+solutionCheckBox.addEventListener('change', () => {
+    if (solutionCheckBox.checked) {
+        addVision()
+    }
+    else {
+        RemoveVision()
+    }
+})
 
+//add post request
 generate_button.addEventListener('click', () => {
     const inputs = document.getElementsByClassName("value-input")
     const options = document.getElementsByClassName("option-input")
@@ -364,42 +412,3 @@ generate_button.addEventListener('click', () => {
     resultDiv.classList.remove("hidden")
 
 })
-
-function RemoveVision() {
-    const elems = document.getElementsByClassName("solution")
-    const elems2 = document.getElementsByClassName("solution2")
-
-    for (let i = 0; i < elems.length; i++) {
-        elems[i].classList.add('road')
-    }
-    for (let i = 0; i < elems2.length; i++) {
-        elems2[i].classList.add('road')
-    }
-}
-
-function addVision() {
-    const elems = document.getElementsByClassName("solution")
-    const elems2 = document.getElementsByClassName("solution2")
-
-    for (let i = 0; i < elems.length; i++) {
-        elems[i].classList.remove('road')
-    }
-    for (let i = 0; i < elems2.length; i++) {
-        elems2[i].classList.remove('road')
-    }
-}
-
-const solutionCheckBox = document.getElementsByClassName("solution-input")[0]
-
-solutionCheckBox.checked = false
-
-
-solutionCheckBox.addEventListener('change', () => {
-    if (solutionCheckBox.checked) {
-        addVision()
-    }
-    else {
-        RemoveVision()
-    }
-})
-
