@@ -12,6 +12,7 @@
     </header>
     
     <main>
+
       <form  class = "container">
           <div class = line>
             Width
@@ -23,7 +24,7 @@
               <input type="checkbox" type="number" class = "option-input">
               Add treasure
               <input type="checkbox" type="number" class = "option-input">
-              option2
+              Add traps
           </div>
 
           <input class = "send-button" value = "Generate Maze">
@@ -31,13 +32,81 @@
             <table class= "result-table">
               
             </table>
-            <div class = line>
+            <div class = "line">
               <input type="checkbox" type="number" class = "solution-input">
               Show solution
 
             </div>
+            <table class = "legend">
+              <tr>
+                <td>
+                  <div class = "square road"></div>
+                <td>
+                <td>
+                - path
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <div class = "square wall"></div>
+                <td>
+                <td>
+                - wall
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <div class = "square treasure"></div>
+                <td>
+                <td>
+                - treasure
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <div class = "square trap"></div>
+                <td>
+                <td>
+                - trap
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <div class = "square solution-legend"></div>
+                <td>
+                <td>
+                - path to exit
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <div class = "square solution2-legend"></div>
+                <td>
+                <td>
+                - path to treasure from path to exit
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <div class = "square exit"></div>
+                <td>
+                <td>
+                - exit
+                </td>
+              </tr>
+              
+              <tr>
+                <td>
+                  <div class = "square entrance"></div>
+                <td>
+                <td>
+                - entrance
+                </td>
+              </tr>
+            </table>  
           </div>
         </form>
+
   </main>
     
   <script src="scripts/script.js"></script>

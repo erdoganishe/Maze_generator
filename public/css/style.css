@@ -7,9 +7,9 @@ body{
     -moz-osx-font-smoothing: grayscale;
     height: 100vh;
     background: url(../images/bg.jpg);
-    background-repeat: no-repeat;
+    
     background-size: cover;
-    background-position: right;
+    background-position: top;
 }
 
 header{
@@ -26,7 +26,6 @@ header h1{
     font-size: 25px;
     margin: 10px;
 }
-
 
 .container{
     
@@ -100,9 +99,12 @@ input{
 }
 
 .exit{
-    background-color: red;
+    background-color: green;
 }
 
+.entrance{
+    background-color: lightgreen;
+}
 
 .treasure{
     background-color: brown;
@@ -123,3 +125,19 @@ input{
     background-color: white;
 }
 
+.trap{
+    background-color: red;
+}
+
+.square{
+    width: 15px;
+    height: 15px;
+}
+.solution2-legend{
+    background-color: blue;
+
+}
+.solution-legend{
+    background-color: coral;
+
+}

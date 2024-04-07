@@ -165,9 +165,9 @@ function generate_maze(width, height) {
 }
 
 //to back, result sends to front
-function get_render_maze(maze, isTreasure) {
+function get_render_maze(maze, isTreasure, isTraps) {
     const treasureIndex = Math.floor(Math.random() * maze.pathToStop.length);
-
+    const trapCount = Math.floor(Math.random() * 3) + 3;
 
     let table = []
     for (let i = 0; i < maze.cells.length * 2 + 1; i += 1) {
@@ -238,6 +238,22 @@ function get_render_maze(maze, isTreasure) {
 
             }
         }
+        if (isTraps){
+            let trapsLocationsAndCount = []
+            do 
+            {trapsLocationsAndCount = generateTrapsWithTreasure(trapCount, maze, treasureIndex)}
+            while (trapsLocationsAndCount[1]>=3)
+    
+            for (let i=0;i<trapsLocationsAndCount[0].length;i++){
+                table[trapsLocationsAndCount[0][i][0]*2+1][trapsLocationsAndCount[0][i][1]*2+1] = 6
+                console.log("Trap here added")
+                console.log("Traps on path", trapsLocationsAndCount)
+            }
+
+        }
+        
+        
+
     }
     else {
 
@@ -279,8 +295,19 @@ function get_render_maze(maze, isTreasure) {
 
             }
         }
+        if(isTraps){
+            let trapsLocationsAndCount = []
+            do 
+                {trapsLocationsAndCount = generateTraps(trapCount, maze)}
+            while (trapsLocationsAndCount[1]>=3)
+    
+            for (let i=0;i<trapsLocationsAndCount[0].length;i++){
+                table[trapsLocationsAndCount[0][i][0]*2+1][trapsLocationsAndCount[0][i][1]*2+1] = 6
+                console.log("Trap here added 2")
+                console.log("Traps on path 2", trapsLocationsAndCount)
+            }
+        }
     }
-
 
     return table
 }
@@ -299,10 +326,77 @@ function isInTreasureSolution(maze, index, x, y) {
     }
     return false
 }
+//to back
+function generateRandomTrap(width, heigth){
+    let trapXY = []
+    let trapX = Math.floor(Math.random()*width)
+    let trapY = Math.floor(Math.random()*heigth)
+    trapXY.push(trapX)
+    trapXY.push(trapY)
+    return trapXY
+}
+//to back
+function generateTrapsWithTreasure(trapCount, maze, treasureIndex){
+    let trapOnPathCount = 0
+    let trapsLocations = []
+    for (let i =0;i<trapCount;i++){
+        let trapXY = []
+        let isTrapOnTreasure = false
+        do {
+            trapXY  = generateRandomTrap(maze.cells[0].length, maze.cells.length)
+            if (maze.pathToStop[treasureIndex][maze.pathToStop[treasureIndex].length-1][0]==trapXY[0] 
+                && maze.pathToStop[treasureIndex][maze.pathToStop[treasureIndex].length-1][0]==trapXY[0]){
+                    isTrapOnTreasure = true
+                }
+        }
+       
+        while(isTrapOnTreasure = false)
+        
 
+        trapsLocations.push(trapXY)
+        console.log(trapXY)
+        let isOnPath = false
+        for (let j=0;j<maze.solution.length;j++){
 
+            if (maze.solution[j][0]==trapXY[0] && maze.solution[j][1]==trapXY[1]){
+                isOnPath = true
+            }
+        }
+        for (let j=0; j<maze.pathToStop[treasureIndex].length-1;j++){
+            if (maze.pathToStop[treasureIndex][j][0]==trapXY[0] && maze.pathToStop[treasureIndex][j][1]==trapXY[1]){
+                isOnPath = true
+            }
+        }
+        if(isOnPath){
+            trapOnPathCount++
+        }
+    }
+    return [trapsLocations, trapOnPathCount]
+}
+
+//to back
+function generateTraps(trapCount, maze){
+    let trapOnPathCount = 0
+    let trapsLocations = []
+    for (let i =0;i<trapCount;i++){
+        let trapXY = generateRandomTrap(maze.cells[0].length, maze.cells.length)
+        trapsLocations.push(trapXY)
+        let isOnPath = false
+        for (let j=0;j<maze.solution.length;j++){
+
+            if (maze.solution[j]==trapXY){
+                isOnPath = true
+            }
+        }
+        
+        if(isOnPath){
+            trapOnPathCount++
+        }
+    }
+    return [trapsLocations, trapOnPathCount]
+}
 //render, front
-function render_maze(render, isTreasure) {
+function render_maze(render) {
     const table = document.getElementsByClassName("result-table")[0]
 
     if (render.length > render[0].length) {
@@ -341,10 +435,15 @@ function render_maze(render, isTreasure) {
             if (render[i][j] == 5) {
                 cell.className = "solution2 solution"
             }
-            if ((i == 1 && j == 0) || (i == render.length - 2 && j == render[0].length - 1)) {
+            if (render[i][j] == 6) {
+                cell.className = "trap"
+            }
+            if (i == render.length - 2 && j == render[0].length - 1) {
                 cell.className = "exit"
             }
-
+            if (i == 1 && j == 0) {
+                cell.className = "entrance"
+            }
 
         }
 
@@ -352,6 +451,7 @@ function render_maze(render, isTreasure) {
     solutionCheckBox.checked = false
     RemoveVision()
 }
+
 
 
 
@@ -402,10 +502,11 @@ generate_button.addEventListener('click', () => {
     const width = inputs[0].value
     const height = inputs[1].value
     const isTreasure = options[0].checked
+    const isTraps = options[1].checked
 
     let maze = generate_maze((width - 1) / 2, (height - 1) / 2)
 
-    render = get_render_maze(maze, isTreasure)
+    render = get_render_maze(maze, isTreasure, isTraps)
     render_maze(render)
 
     const resultDiv = document.getElementsByClassName("result")[0]
