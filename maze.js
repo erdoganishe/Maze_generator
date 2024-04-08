@@ -300,7 +300,7 @@ function get_render_maze(maze, isTreasure, isTraps) {
       } while (trapsLocationsAndCount[1] >= 3);
 
       for (let i = 0; i < trapsLocationsAndCount[0].length; i++) {
-        table[trapsLocationsAndCount[0][i][0] * 2 + 1][trapsLocationsAndCount[0][i][1] * 2 + 1] = 6;
+        table[trapsLocationsAndCount[0][i][1] * 2 + 1][trapsLocationsAndCount[0][i][0] * 2 + 1] = 6;
       }
     }
   }
