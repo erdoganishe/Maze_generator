@@ -40,6 +40,6 @@ It took almost 4 hours to write algorithm and render of maze at front end, and a
 
 Some Showcases:
 
-![My Image](images/1.jpg)
-![My Image](images/2.jpg)
-![My Image](images/3.jpg)
+![My Image](images/1.png)
+![My Image](images/2.png)
+![My Image](images/3.png)
