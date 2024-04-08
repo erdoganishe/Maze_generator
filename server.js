@@ -2,6 +2,8 @@ const express = require('express');
 const app = express();
 const port = 3000;
 const path = require('path');
+const mazeRouter = require('./maze');
+
 
 const router = express.Router();
 
@@ -15,6 +17,8 @@ router.get('/', (req, res) => {
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', router);
+
+app.use('/api', mazeRouter);
 
 app.post('/maze', (req, res) => {
     const { width, height } = req.body;
